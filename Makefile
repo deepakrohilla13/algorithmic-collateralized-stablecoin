@@ -25,7 +25,7 @@ update:; forge update
 
 build:; forge build
 
-test :; forge test 
+test :; forge test --fork-url http://127.0.0.1:8545 -vvvv
 
 coverage :; forge coverage --report debug > coverage-report.txt
 

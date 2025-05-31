@@ -3,6 +3,7 @@
 
 pragma solidity ^0.8.18;
 
+import "forge-std/console.sol";
 import {DecentralizedStableCoin} from "./DecentralizedStableCoin.sol";
 import {ReentrancyGuard} from "lib/openzeppelin-contracts/contracts/security/ReentrancyGuard.sol";
 import {IERC20} from "lib/openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
@@ -79,6 +80,8 @@ contract DSCEngine is ReentrancyGuard {
             revert DSCEngine__TokenAddressAndPriceFeedAddressMustBeSameLength();
         }
         for (uint256 i = 0; i < tokenAddresses.length; i++) {
+            console.log("Price Feed Address: %s", priceFeedAddresses[i]);
+            console.log("Token Address: %s", tokenAddresses[i]);
             s_priceFeeds[tokenAddresses[i]] = priceFeedAddresses[i];
             s_collateralTokens.push(tokenAddresses[i]);
         }
@@ -180,6 +183,7 @@ contract DSCEngine is ReentrancyGuard {
 
     function getUsdValue(address token, uint256 amount) public view returns (uint256) {
         AggregatorV3Interface priceFeed = AggregatorV3Interface(s_priceFeeds[token]);
+        console.log("Price Feed Address: %s", address(priceFeed));
         (, int256 price,,,) = priceFeed.latestRoundData();
         return ((uint256(price) * ADDITIONAL_FEED_PRECISION) * amount) / PRECISION;
     }
